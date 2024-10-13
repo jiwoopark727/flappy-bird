@@ -1,27 +1,27 @@
-// Background scrolling speed
+// 배경 스크롤 속도
 let move_speed = 5;
 
-// Gravity constant value
+// 중력 상수 값
 let gravity = 0.5;
 
-// Getting reference to the bird element
+// 새 요소를 참조
 let bird = document.querySelector('.bird');
 
-// Getting bird element properties
+// 새 요소의 속성 가져오기
 let bird_props = bird.getBoundingClientRect();
 let background = document.querySelector('.background').getBoundingClientRect();
 
-// Getting reference to the score element
+// 점수 요소를 참조
 let score_val = document.querySelector('.score_val');
 let message = document.querySelector('.message');
 let score_title = document.querySelector('.score_title');
 
-// Setting initial game state to start
+// 게임 상태를 초기화 (시작 상태로 설정)
 let game_state = 'Start';
 
-// Add an eventlistener for key presses
+// 키보드 입력 이벤트 리스너 추가
 document.addEventListener('keydown', (e) => {
-  // Start the game if enter key is pressed
+  // 엔터 키가 눌리면 게임 시작
   if (e.key == 'Enter' && game_state != 'Play') {
     document.querySelectorAll('.pipe_sprite').forEach((e) => {
       e.remove();
@@ -37,36 +37,33 @@ document.addEventListener('keydown', (e) => {
 
 function play() {
   function move() {
-    // Detect if game has ended
+    // 게임이 종료되었는지 감지
     if (game_state != 'Play') return;
 
-    // Getting reference to all the pipe elements
+    // 모든 파이프 요소를 참조
     let pipe_sprite = document.querySelectorAll('.pipe_sprite');
     pipe_sprite.forEach((element) => {
       let pipe_sprite_props = element.getBoundingClientRect();
       bird_props = bird.getBoundingClientRect();
 
-      // Delete the pipes if they have moved out
-      // of the screen hence saving memory
+      // 화면 밖으로 나간 파이프는 삭제하여 메모리 절약
       if (pipe_sprite_props.right <= 0) {
         element.remove();
       } else {
-        // Collision detection with bird and pipes
+        // 새와 파이프의 충돌 감지
         if (
           bird_props.left < pipe_sprite_props.left + pipe_sprite_props.width &&
           bird_props.left + bird_props.width > pipe_sprite_props.left &&
           bird_props.top < pipe_sprite_props.top + pipe_sprite_props.height &&
           bird_props.top + bird_props.height > pipe_sprite_props.top
         ) {
-          // Change game state and end the game
-          // if collision occurs
+          // 충돌이 발생하면 게임 상태를 변경하고 게임 종료
           game_state = 'End';
           message.innerHTML = '엔터키를 눌러 게임 재시작';
           message.style.left = '26vw';
           return;
         } else {
-          // Increase the score if player
-          // has the successfully dodged the
+          // 플레이어가 파이프를 성공적으로 회피하면 점수 증가
           if (
             pipe_sprite_props.right < bird_props.left &&
             pipe_sprite_props.right + move_speed >= bird_props.left &&
@@ -93,8 +90,7 @@ function play() {
       }
     });
 
-    // Collision detection with bird and
-    // window top and bottom
+    // 새와 창 상단 또는 하단의 충돌 감지
     if (bird_props.top <= 0 || bird_props.bottom >= background.bottom) {
       game_state = 'End';
       message.innerHTML = '엔터키를 눌러 게임 재시작';
@@ -110,25 +106,24 @@ function play() {
 
   let pipe_seperation = 0;
 
-  // Constant value for the gap between two pipes
+  // 두 파이프 사이의 간격에 대한 상수 값
   let pipe_gap = 35;
   function create_pipe() {
     if (game_state != 'Play') return;
 
-    // Create another set of pipes
-    // if distance between two pipe has exceeded
-    // a predefined value
+    // 두 파이프 사이의 거리가 미리 정의된 값을 초과하면
+    // 새로운 파이프 세트를 생성
     if (pipe_seperation > 115) {
       pipe_seperation = 0;
 
-      // Calculate random position of pipes on y axis
+      // 파이프의 Y축 위치를 무작위로 계산
       let pipe_posi = Math.floor(Math.random() * 43) + 8;
       let pipe_sprite_inv = document.createElement('div');
       pipe_sprite_inv.className = 'pipe_sprite';
       pipe_sprite_inv.style.top = pipe_posi - 70 + 'vh';
       pipe_sprite_inv.style.left = '100vw';
 
-      // Append the created pipe element in DOM
+      // 생성된 파이프 요소를 DOM에 추가
       document.body.appendChild(pipe_sprite_inv);
       let pipe_sprite = document.createElement('div');
       pipe_sprite.className = 'pipe_sprite';
@@ -136,7 +131,7 @@ function play() {
       pipe_sprite.style.left = '100vw';
       pipe_sprite.increase_score = '1';
 
-      // Append the created pipe element in DOM
+      // 생성된 파이프 요소를 DOM에 추가
       document.body.appendChild(pipe_sprite);
     }
     pipe_seperation++;
