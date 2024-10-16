@@ -16,7 +16,7 @@ let score_val = document.querySelector('.score_val');
 let message = document.querySelector('.message');
 let score_title = document.querySelector('.score_title');
 
-// 게임 상태를 초기화 (시작 상태로 설정)
+// 게임 상태를 초기화
 let game_state = 'Start';
 
 // 키보드 입력 이벤트 리스너 추가
