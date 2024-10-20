@@ -53,15 +53,15 @@ body {
   left: 100vw;
   height: 70vh;
   width: 6vw;
-  border: 5px solid rgb(43, 43, 43);
+  /* border: 5px solid rgb(43, 43, 43); */
 }
 
 /* 위쪽 파이프 스타일 */
 .pipe_sprite_top {
   background-image: url('pipe_top.png'); /* 위쪽 파이프 이미지 */
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
-  background-position: top;
+  background-position: bottom;
 }
 
 /* 아래쪽 파이프 스타일 */
@@ -69,7 +69,7 @@ body {
   background-image: url('pipe_bottom.png'); /* 아래쪽 파이프 이미지 */
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: top;
 }
 
 .message {

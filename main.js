@@ -1,8 +1,80 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {
+  getDatabase,
+  ref,
+  set,
+  get,
+  child,
+  update,
+  query,
+  orderByChild,
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+
+// Firebase 설정
+const firebaseConfig = {
+  apiKey: 'AIzaSyBepd6pzHsheESMVwgo5Ja2iTaYZg7MZFQ',
+  authDomain: 'flappy-bird-efdcb.firebaseapp.com',
+  databaseURL: 'https://flappy-bird-efdcb-default-rtdb.firebaseio.com',
+  projectId: 'flappy-bird-efdcb',
+  storageBucket: 'flappy-bird-efdcb.appspot.com',
+  messagingSenderId: '725142925346',
+  appId: '1:725142925346:web:e765bff9199b96bff0da7b',
+  measurementId: 'G-8727RQ0CKS',
+};
+
+// Firebase 초기화
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app); // Realtime Database 초기화
+
+// 전역 변수 선언
+let globalName = '';
+let globalDepartment = '';
+let globalStudentId = '';
+let globalGamesPlay = 0;
+
+// 사용자 정보를 저장하는 함수
+async function saveUserData(studentId, name, department) {
+  try {
+    const userRef = ref(db, 'users/' + studentId);
+    await set(userRef, {
+      name: name,
+      department: department,
+      studentId: studentId,
+      gamesPlayed: 0,
+      highScore: 0,
+    });
+    console.log('사용자 정보가 성공적으로 저장되었습니다.');
+  } catch (error) {
+    console.error('사용자 정보 저장 실패:', error);
+  }
+}
+
+// 게임 종료 후 점수 저장
+// 전역 변수 사용 예시 (게임 종료 시 데이터 저장)
+async function endGame(score) {
+  const userRef = ref(db, 'users/' + globalStudentId);
+
+  const snapshot = await get(userRef);
+  if (snapshot.exists()) {
+    const userData = snapshot.val();
+    const highScore = Math.max(userData.highScore, score); // 최고 점수 갱신
+
+    // 업데이트된 최고 점수와 게임 플레이 수 저장
+    await update(userRef, {
+      // gamesPlayed: userData.gamesPlayed + 1,
+      highScore: highScore,
+    });
+    console.log('게임 결과 저장 완료:', highScore);
+  } else {
+    console.error('사용자 데이터를 찾을 수 없습니다.');
+  }
+}
+
 // 배경 스크롤 속도
-let move_speed = 4.5;
+let move_speed = 5;
 
 // 중력 상수 값
-let gravity = 0.7;
+let gravity = 0.65;
 
 // 새 요소를 참조
 let bird = document.querySelector('.bird');
@@ -21,9 +93,72 @@ let score_title = document.querySelector('.score_title');
 let game_state = 'Start';
 
 // 키보드 입력 이벤트 리스너 추가
-document.addEventListener('keydown', (e) => {
-  // 엔터 키가 눌리면 게임 시작
+document.addEventListener('keydown', async (e) => {
   if (e.key == 'Enter' && game_state != 'Play') {
+    if (
+      globalName === '' ||
+      globalDepartment === '' ||
+      globalStudentId === ''
+    ) {
+      const name = document.getElementById('name').value;
+      const department = document.getElementById('department').value;
+      const studentId = document.getElementById('studentId').value;
+      // 입력 값이 없으면 경고
+      if (!name || !department || !studentId) {
+        alert('모든 정보를 입력해주세요.');
+        return;
+      }
+      // 전역 변수에 사용자 정보 저장
+      globalName = name;
+      globalDepartment = department;
+      globalStudentId = studentId;
+      globalGamesPlay = 0;
+
+      // 사용자 정보를 저장
+      await saveUserData(studentId, name, department);
+    } else if (globalGamesPlay >= 3) {
+      alert('3번의 기회를 다 소진했습니다. 로그인 화면으로 돌아갑니다.');
+      // 'users' 경로의 데이터를 highScore 기준으로 오름차순으로 가져오기
+      const usersRef = ref(db, 'users');
+      const highScoreQuery = query(usersRef, orderByChild('highScore'));
+
+      const snapshot = await get(highScoreQuery);
+
+      if (snapshot.exists()) {
+        const usersData = snapshot.val();
+
+        // 객체를 배열로 변환하여 highScore 기준으로 내림차순 정렬
+        const sortedUsers = Object.entries(usersData).sort(
+          ([, userA], [, userB]) => userB.highScore - userA.highScore
+        ); // 내림차순 정렬
+
+        // 정렬된 결과를 출력
+        sortedUsers.forEach(([studentId, user]) => {
+          console.log(
+            `사용자: ${user.name}, 학과: ${user.department}, 최고 점수: ${user.highScore}`
+          );
+        });
+      } else {
+        console.log('사용자 데이터를 찾을 수 없습니다.');
+      }
+      // location.reload();
+    }
+
+    const userRef = ref(db, 'users/' + globalStudentId);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+
+      // 업데이트된 최고 점수와 게임 플레이 수 저장
+      await update(userRef, {
+        gamesPlayed: userData.gamesPlayed + 1,
+      });
+      console.log('게임 플레이 횟수 1 증가');
+    } else {
+      console.error('사용자 데이터를 찾을 수 없습니다.');
+    }
+
+    // 나머지 게임 시작 로직
     document.querySelectorAll('.pipe_sprite').forEach((e) => {
       e.remove();
     });
@@ -33,9 +168,18 @@ document.addEventListener('keydown', (e) => {
     message2.innerHTML = '';
     score_title.innerHTML = '';
     score_val.innerHTML = '0';
+    globalGamesPlay += 1;
     play();
   }
 });
+
+// function reload() {
+//   location.reload
+// }
+
+// function dbUse() {
+//   function
+// }
 
 function play() {
   function move() {
@@ -62,6 +206,7 @@ function play() {
           // 충돌이 발생하면 게임 상태를 변경하고 게임 종료
           game_state = 'End';
           message2.innerHTML = 'PRESS ENTER';
+          endGame(score_val.innerHTML);
           // message.style.left = '26vw';
           return;
         } else {
@@ -83,7 +228,7 @@ function play() {
   requestAnimationFrame(move);
 
   let bird_dy = 0;
-  function apply_gravity() {
+  async function apply_gravity() {
     if (game_state != 'Play') return;
     bird_dy = bird_dy + gravity;
     document.addEventListener('keydown', (e) => {
@@ -96,10 +241,28 @@ function play() {
     if (bird_props.top <= 0 || bird_props.bottom >= background.bottom) {
       game_state = 'End';
       message2.innerHTML = 'PRESS ENTER';
+      endGame(score_val.innerHTML);
+
+      // 게임 플레이 횟수 -1
+      const userRef = ref(db, 'users/' + globalStudentId);
+      const snapshot = await get(userRef);
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        // 업데이트된 최고 점수와 게임 플레이 수 저장
+        await update(userRef, {
+          gamesPlayed: userData.gamesPlayed - 0.5,
+        });
+        console.log('게임플레이횟수 -1 성공');
+      } else {
+        console.error('사용자 데이터를 찾을 수 없습니다.');
+      }
+      globalGamesPlay -= 0.5;
+
       // message.style.left = '26vw';
       bird_props = bird.getBoundingClientRect();
       return;
     }
+
     bird.style.top = bird_props.top + bird_dy + 'px';
     bird_props = bird.getBoundingClientRect();
     requestAnimationFrame(apply_gravity);
@@ -109,37 +272,8 @@ function play() {
   let pipe_seperation = 0;
 
   // 두 파이프 사이의 간격에 대한 상수 값
-  let pipe_gap = 32;
-  // function create_pipe() {
-  //   if (game_state != 'Play') return;
+  let pipe_gap = 30;
 
-  //   // 두 파이프 사이의 거리가 미리 정의된 값을 초과하면
-  //   // 새로운 파이프 세트를 생성
-  //   // 배경 이동 속도와 반비례하기 pipe_seperation
-  //   if (pipe_seperation > 100) {
-  //     pipe_seperation = 0;
-
-  //     // 파이프의 Y축 위치를 무작위로 계산
-  //     let pipe_posi = Math.floor(Math.random() * 50) + 8;
-  //     let pipe_sprite_inv = document.createElement('div');
-  //     pipe_sprite_inv.className = 'pipe_sprite';
-  //     pipe_sprite_inv.style.top = pipe_posi - 70 + 'vh';
-  //     pipe_sprite_inv.style.left = '100vw';
-
-  //     // 생성된 파이프 요소를 DOM에 추가
-  //     document.body.appendChild(pipe_sprite_inv);
-  //     let pipe_sprite = document.createElement('div');
-  //     pipe_sprite.className = 'pipe_sprite';
-  //     pipe_sprite.style.top = pipe_posi + pipe_gap + 'vh';
-  //     pipe_sprite.style.left = '100vw';
-  //     pipe_sprite.increase_score = '1';
-
-  //     // 생성된 파이프 요소를 DOM에 추가
-  //     document.body.appendChild(pipe_sprite);
-  //   }
-  //   pipe_seperation++;
-  //   requestAnimationFrame(create_pipe);
-  // }
   function create_pipe() {
     if (game_state != 'Play') return;
 

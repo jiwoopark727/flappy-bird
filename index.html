@@ -2,17 +2,47 @@
 <html>
   <head>
     <link rel="stylesheet" href="style.css" />
+    <meta http-equiv="Refresh" />
+    <title>flappy bird</title>
+    <script type="module">
+      // Firebase SDK 모듈 방식으로 사용
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+      import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+      import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+      import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js';
+    </script>
   </head>
-
   <body>
+    <!-- <script>
+      새로고침 코드
+      setTimeout('location.reload()', 10000);
+    </script> -->
     <div class="background"></div>
     <img class="bird" src="logo.png" alt="bird-img" />
     <span class="message">
       FLAPPY BIRD
-      <div>
-        <input type="text" placeholder="이름" style="padding: 10px" />
-        <input type="text" placeholder="학과" style="padding: 10px" />
-        <input type="text" placeholder="학번" style="padding: 10px" />
+      <div class="user-info">
+        <input
+          type="text"
+          id="name"
+          placeholder="이름"
+          required
+          style="padding: 10px"
+        />
+        <input
+          type="text"
+          id="department"
+          placeholder="학과"
+          required
+          style="padding: 10px"
+        />
+        <input
+          type="text"
+          id="studentId"
+          placeholder="학번"
+          required
+          style="padding: 10px"
+        />
       </div>
     </span>
     <span class="message2"> </span>
@@ -20,6 +50,7 @@
       <span class="score_title"></span>
       <span class="score_val"></span>
     </div>
-    <script src="main.js"></script>
+
+    <script type="module" src="main.js"></script>
   </body>
 </html>
