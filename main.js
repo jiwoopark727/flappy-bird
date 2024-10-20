@@ -94,6 +94,12 @@ let game_state = 'Start';
 
 // 키보드 입력 이벤트 리스너 추가
 document.addEventListener('keydown', async (e) => {
+  // 게임 종료 후 엔터를 한 번 더 눌렀을 때 페이지를 새로고침하기 위한 상태
+  if (game_state === 'ShowRanking' && e.key == 'Enter') {
+    location.reload(); // 새로고침
+    return;
+  }
+
   if (e.key == 'Enter' && game_state != 'Play') {
     if (
       globalName === '' ||
@@ -116,8 +122,9 @@ document.addEventListener('keydown', async (e) => {
 
       // 사용자 정보를 저장
       await saveUserData(studentId, name, department);
-    } else if (globalGamesPlay >= 1) {
+    } else if (globalGamesPlay >= 3) {
       alert('3번의 기회를 다 소진했습니다. 로그인 화면으로 돌아갑니다.');
+
       // 'users' 경로의 데이터를 highScore 기준으로 오름차순으로 가져오기
       const usersRef = ref(db, 'users');
       const highScoreQuery = query(usersRef, orderByChild('highScore'));
@@ -133,33 +140,24 @@ document.addEventListener('keydown', async (e) => {
         ); // 내림차순 정렬
 
         // 정렬된 결과를 출력
-        sortedUsers.forEach(([studentId, user]) => {
-          console.log(
-            `사용자: ${user.name}, 학과: ${user.department}, 최고 점수: ${user.highScore}`
-          );
-        });
-
         const rankingListItems = document.querySelector('.ranking');
 
         // 순위 데이터와 li 요소에 매핑하여 각 순위를 li 요소에 채움
         sortedUsers.slice(0, 10).forEach((user, index) => {
           const li = document.createElement('li');
-          console.log(user);
-          li.textContent = `${index + 1}위      ${user[1].name}     ${
+          li.textContent = `${index + 1}위 ${user[1].name} ${
             user[1].department
-          }      ${user[1].studentId}      ${user[1].highScore}점`;
+          } ${user[1].studentId} ${user[1].highScore}점`;
 
           rankingListItems.appendChild(li);
-
-          console.log(rankingListItems);
         });
       } else {
         console.log('사용자 데이터를 찾을 수 없습니다.');
       }
 
-      if (e.key == 'Enter') {
-        location.reload();
-      }
+      // 게임 상태를 'ShowRanking'으로 변경하여 엔터를 한 번 더 누르면 새로고침되도록 설정
+      game_state = 'ShowRanking';
+      return; // 랭킹을 보여주고, 이후 처리를 중단
     }
 
     const userRef = ref(db, 'users/' + globalStudentId);
@@ -235,6 +233,11 @@ function play() {
             element.increase_score == '1'
           ) {
             score_val.innerHTML = +score_val.innerHTML + 1;
+            const audio = new Audio('Coin.mp3');
+            // 소리 재생
+            audio.play().catch((error) => {
+              console.error('소리 재생 중 오류 발생:', error);
+            });
           }
           element.style.left = pipe_sprite_props.left - move_speed + 'px';
         }

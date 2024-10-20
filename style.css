@@ -116,11 +116,22 @@ body {
   color: white;
 }
 
+ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 가운데 정렬 */
+  align-items: center; /* 가로 가운데 정렬 */
+  position: relative;
+  height: 53vh; /* 부모 요소의 높이를 100% 설정 (화면 전체 기준) */
+  width: 116vw; /* 부모 요소의 너비를 100%로 설정 */
+}
+
 ul li {
   list-style: none;
   padding-top: 16px;
-  z-index: 100;
   font-size: 30px;
   color: darkblue;
-  text-align: center;
+  text-align: left; /* 텍스트를 왼쪽 정렬 */
+  position: relative;
+  width: 30%; /* li의 너비를 50%로 설정 (화면 전체의 50%) */
 }
