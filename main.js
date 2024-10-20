@@ -1,8 +1,8 @@
 // 배경 스크롤 속도
-let move_speed = 5;
+let move_speed = 4.5;
 
 // 중력 상수 값
-let gravity = 0.5;
+let gravity = 0.7;
 
 // 새 요소를 참조
 let bird = document.querySelector('.bird');
@@ -14,6 +14,7 @@ let background = document.querySelector('.background').getBoundingClientRect();
 // 점수 요소를 참조
 let score_val = document.querySelector('.score_val');
 let message = document.querySelector('.message');
+let message2 = document.querySelector('.message2');
 let score_title = document.querySelector('.score_title');
 
 // 게임 상태를 초기화
@@ -29,7 +30,8 @@ document.addEventListener('keydown', (e) => {
     bird.style.top = '40vh';
     game_state = 'Play';
     message.innerHTML = '';
-    score_title.innerHTML = 'Score : ';
+    message2.innerHTML = '';
+    score_title.innerHTML = '';
     score_val.innerHTML = '0';
     play();
   }
@@ -59,8 +61,8 @@ function play() {
         ) {
           // 충돌이 발생하면 게임 상태를 변경하고 게임 종료
           game_state = 'End';
-          message.innerHTML = '엔터키를 눌러 게임 재시작';
-          message.style.left = '26vw';
+          message2.innerHTML = 'PRESS ENTER';
+          // message.style.left = '26vw';
           return;
         } else {
           // 플레이어가 파이프를 성공적으로 회피하면 점수 증가
@@ -93,8 +95,8 @@ function play() {
     // 새와 창 상단 또는 하단의 충돌 감지
     if (bird_props.top <= 0 || bird_props.bottom >= background.bottom) {
       game_state = 'End';
-      message.innerHTML = '엔터키를 눌러 게임 재시작';
-      message.style.left = '26vw';
+      message2.innerHTML = 'PRESS ENTER';
+      // message.style.left = '26vw';
       bird_props = bird.getBoundingClientRect();
       return;
     }
@@ -107,35 +109,64 @@ function play() {
   let pipe_seperation = 0;
 
   // 두 파이프 사이의 간격에 대한 상수 값
-  let pipe_gap = 35;
+  let pipe_gap = 32;
+  // function create_pipe() {
+  //   if (game_state != 'Play') return;
+
+  //   // 두 파이프 사이의 거리가 미리 정의된 값을 초과하면
+  //   // 새로운 파이프 세트를 생성
+  //   // 배경 이동 속도와 반비례하기 pipe_seperation
+  //   if (pipe_seperation > 100) {
+  //     pipe_seperation = 0;
+
+  //     // 파이프의 Y축 위치를 무작위로 계산
+  //     let pipe_posi = Math.floor(Math.random() * 50) + 8;
+  //     let pipe_sprite_inv = document.createElement('div');
+  //     pipe_sprite_inv.className = 'pipe_sprite';
+  //     pipe_sprite_inv.style.top = pipe_posi - 70 + 'vh';
+  //     pipe_sprite_inv.style.left = '100vw';
+
+  //     // 생성된 파이프 요소를 DOM에 추가
+  //     document.body.appendChild(pipe_sprite_inv);
+  //     let pipe_sprite = document.createElement('div');
+  //     pipe_sprite.className = 'pipe_sprite';
+  //     pipe_sprite.style.top = pipe_posi + pipe_gap + 'vh';
+  //     pipe_sprite.style.left = '100vw';
+  //     pipe_sprite.increase_score = '1';
+
+  //     // 생성된 파이프 요소를 DOM에 추가
+  //     document.body.appendChild(pipe_sprite);
+  //   }
+  //   pipe_seperation++;
+  //   requestAnimationFrame(create_pipe);
+  // }
   function create_pipe() {
     if (game_state != 'Play') return;
 
-    // 두 파이프 사이의 거리가 미리 정의된 값을 초과하면
-    // 새로운 파이프 세트를 생성
-    if (pipe_seperation > 115) {
+    if (pipe_seperation > 100) {
       pipe_seperation = 0;
 
       // 파이프의 Y축 위치를 무작위로 계산
-      let pipe_posi = Math.floor(Math.random() * 43) + 8;
+      let pipe_posi = Math.floor(Math.random() * 50) + 8;
+
+      // 위쪽 파이프 생성
       let pipe_sprite_inv = document.createElement('div');
-      pipe_sprite_inv.className = 'pipe_sprite';
+      pipe_sprite_inv.className = 'pipe_sprite pipe_sprite_top'; // 위쪽 파이프에 특정 클래스 추가
       pipe_sprite_inv.style.top = pipe_posi - 70 + 'vh';
       pipe_sprite_inv.style.left = '100vw';
-
-      // 생성된 파이프 요소를 DOM에 추가
       document.body.appendChild(pipe_sprite_inv);
+
+      // 아래쪽 파이프 생성
       let pipe_sprite = document.createElement('div');
-      pipe_sprite.className = 'pipe_sprite';
+      pipe_sprite.className = 'pipe_sprite pipe_sprite_bottom'; // 아래쪽 파이프에 특정 클래스 추가
       pipe_sprite.style.top = pipe_posi + pipe_gap + 'vh';
       pipe_sprite.style.left = '100vw';
       pipe_sprite.increase_score = '1';
-
-      // 생성된 파이프 요소를 DOM에 추가
       document.body.appendChild(pipe_sprite);
     }
     pipe_seperation++;
     requestAnimationFrame(create_pipe);
   }
+
   requestAnimationFrame(create_pipe);
 }

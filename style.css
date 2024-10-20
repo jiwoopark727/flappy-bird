@@ -4,6 +4,25 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: 'bitbit';
+  src: url('//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff'),
+    url('//cdn.df.nexon.com/img/common/font/DNFBitBit-Regular.woff2');
+}
+
+/* 깜빡이는 애니메이션 정의 */
+@keyframes blink {
+  0% {
+    opacity: 1; /* 처음에 완전히 보임 */
+  }
+  50% {
+    opacity: 0; /* 중간에 완전히 사라짐 */
+  }
+  100% {
+    opacity: 1; /* 다시 보이도록 */
+  }
+}
+
 body {
   height: 100vh;
   width: 100vw;
@@ -13,53 +32,86 @@ body {
   height: 100vh;
   width: 100vw;
   background-color: skyblue;
+  background-image: url('background.jpg');
+  background-size: cover; /* 이미지가 요소를 가득 채우도록 함 */
+  background-repeat: no-repeat; /* 이미지 반복 금지 */
+  background-position: bottom; /* 이미지를 상단에 맞춤 */
 }
 
 .bird {
-  height: 65px;
-  width: 90px;
+  height: 60px;
+  width: 85px;
   position: fixed;
   top: 40vh;
   left: 30vw;
   z-index: 100;
 }
 
+/* 공통 파이프 스타일 */
 .pipe_sprite {
   position: fixed;
-  top: 40vh;
   left: 100vw;
   height: 70vh;
   width: 6vw;
   border: 5px solid rgb(43, 43, 43);
-  /* background-color: rgb(0, 180, 0); */
-  background-image: url('pipe.png'); /* 여기에 원하는 이미지 경로 */
-  background-size: cover; /* 이미지를 파이프 크기에 맞춤 */
-  background-repeat: no-repeat; /* 이미지를 반복하지 않음 */
+}
+
+/* 위쪽 파이프 스타일 */
+.pipe_sprite_top {
+  background-image: url('pipe_top.png'); /* 위쪽 파이프 이미지 */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+/* 아래쪽 파이프 스타일 */
+.pipe_sprite_bottom {
+  background-image: url('pipe_bottom.png'); /* 아래쪽 파이프 이미지 */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .message {
+  font-family: 'bitbit', sans-serif;
   position: fixed;
-  z-index: 10;
+  z-index: 100;
   height: 10vh;
-  font-size: 7.5vh;
+  font-size: 10vh;
   font-weight: 100;
   color: black;
   top: 12vh;
-  left: 20vw;
+  left: 35.5vw;
+  text-align: center;
+}
+
+.message2 {
+  font-family: 'bitbit', sans-serif;
+  animation: blink 1s infinite; /* 1초마다 깜빡거림 */
+  position: fixed;
+  z-index: 10;
+  height: 10vh;
+  font-size: 10vh;
+  font-weight: 100;
+  color: black;
+  top: 12vh;
+  left: 35.5vw;
   text-align: center;
 }
 
 .score {
+  font-family: 'bitbit', sans-serif;
   position: fixed;
+  width: 100%;
+  top: 25%;
+  text-align: center;
   z-index: 10;
   height: 10vh;
   font-size: 8vh;
   font-weight: 100;
-  color: rgb(32, 91, 218);
-  top: 0;
-  left: 0;
+  color: white;
 }
 
 .score_val {
-  color: rgb(32, 91, 218);
+  color: white;
 }
