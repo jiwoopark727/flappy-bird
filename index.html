@@ -11,12 +11,9 @@
       import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
       import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js';
     </script>
+    <script defer type="module" src="main.js"></script>
   </head>
   <body>
-    <!-- <script>
-      새로고침 코드
-      setTimeout('location.reload()', 10000);
-    </script> -->
     <div class="background"></div>
     <img class="bird" src="logo.png" alt="bird-img" />
     <span class="message">
@@ -49,8 +46,7 @@
     <div class="score" style="padding-left: 15px">
       <span class="score_title"></span>
       <span class="score_val"></span>
+      <ul class="ranking"></ul>
     </div>
-
-    <script type="module" src="main.js"></script>
   </body>
 </html>

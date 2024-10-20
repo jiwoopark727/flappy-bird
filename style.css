@@ -115,3 +115,12 @@ body {
 .score_val {
   color: white;
 }
+
+ul li {
+  list-style: none;
+  padding-top: 16px;
+  z-index: 100;
+  font-size: 30px;
+  color: darkblue;
+  text-align: center;
+}

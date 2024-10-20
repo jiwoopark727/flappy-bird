@@ -116,7 +116,7 @@ document.addEventListener('keydown', async (e) => {
 
       // 사용자 정보를 저장
       await saveUserData(studentId, name, department);
-    } else if (globalGamesPlay >= 3) {
+    } else if (globalGamesPlay >= 1) {
       alert('3번의 기회를 다 소진했습니다. 로그인 화면으로 돌아갑니다.');
       // 'users' 경로의 데이터를 highScore 기준으로 오름차순으로 가져오기
       const usersRef = ref(db, 'users');
@@ -138,10 +138,28 @@ document.addEventListener('keydown', async (e) => {
             `사용자: ${user.name}, 학과: ${user.department}, 최고 점수: ${user.highScore}`
           );
         });
+
+        const rankingListItems = document.querySelector('.ranking');
+
+        // 순위 데이터와 li 요소에 매핑하여 각 순위를 li 요소에 채움
+        sortedUsers.slice(0, 10).forEach((user, index) => {
+          const li = document.createElement('li');
+          console.log(user);
+          li.textContent = `${index + 1}위      ${user[1].name}     ${
+            user[1].department
+          }      ${user[1].studentId}      ${user[1].highScore}점`;
+
+          rankingListItems.appendChild(li);
+
+          console.log(rankingListItems);
+        });
       } else {
         console.log('사용자 데이터를 찾을 수 없습니다.');
       }
-      // location.reload();
+
+      if (e.key == 'Enter') {
+        location.reload();
+      }
     }
 
     const userRef = ref(db, 'users/' + globalStudentId);
