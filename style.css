@@ -91,6 +91,8 @@ body {
   top: 12vh;
   left: 32vw;
   text-align: center;
+  text-shadow: -4px -4px 0 black, /* 왼쪽 위 */ 4px -4px 0 black,
+    /* 오른쪽 위 */ -4px 4px 0 black, /* 왼쪽 아래 */ 4px 4px 0 black; /* 오른쪽 아래 */
 }
 
 .message2 {
@@ -101,10 +103,12 @@ body {
   height: 10vh;
   font-size: 10vh;
   font-weight: 100;
-  color: black;
+  color: white;
   top: 4vh;
-  left: 35.5vw;
+  left: 34vw;
   text-align: center;
+  text-shadow: -3px -3px 0 black, /* 왼쪽 위 */ 3px -3px 0 black,
+    /* 오른쪽 위 */ -3px 3px 0 black, /* 왼쪽 아래 */ 3px 3px 0 black; /* 오른쪽 아래 */
 }
 
 .score {
@@ -123,6 +127,8 @@ body {
 
 .score_val {
   color: white;
+  text-shadow: -2px -2px 0 black, /* 왼쪽 위 */ 2px -2px 0 black,
+    /* 오른쪽 위 */ -2px 2px 0 black, /* 왼쪽 아래 */ 2px 2px 0 black; /* 오른쪽 아래 */
 }
 
 ul {
@@ -132,7 +138,8 @@ ul {
   align-items: center; /* 가로 가운데 정렬 */
   position: relative;
   height: 53vh; /* 부모 요소의 높이를 100% 설정 (화면 전체 기준) */
-  width: 109vw; /* 부모 요소의 너비를 100%로 설정 */
+  left: -2%;
+  width: 115vw; /* 부모 요소의 너비를 100%로 설정 */
 }
 
 ul li {
@@ -142,5 +149,5 @@ ul li {
   color: darkblue;
   text-align: left; /* 텍스트를 왼쪽 정렬 */
   position: relative;
-  width: 30%; /* li의 너비를 50%로 설정 (화면 전체의 50%) */
+  width: 35%; /* li의 너비를 50%로 설정 (화면 전체의 50%) */
 }

@@ -155,19 +155,12 @@ document.addEventListener('keydown', async (e) => {
         console.log('사용자 데이터를 찾을 수 없습니다.');
       }
 
-      if (score_val.innerHTML > 1) {
+      if (score_val.innerHTML > 2) {
         const listItems = document.querySelectorAll('.ranking li'); // ul li 요소들 선택
         listItems.forEach(function (item) {
           item.style.color = 'white'; // 각 li 요소의 color 속성 변경
         });
       }
-
-      // if (score_val.innerHTML > 40) {
-      //   const listItems = document.querySelectorAll('.ranking li'); // ul li 요소들 선택
-      //   listItems.forEach(function (item) {
-      //     item.style.color = 'white'; // 각 li 요소의 color 속성 변경
-      //   });
-      // }
 
       // 게임 상태를 'ShowRanking'으로 변경하여 엔터를 한 번 더 누르면 새로고침되도록 설정
       game_state = 'ShowRanking';
@@ -205,14 +198,6 @@ document.addEventListener('keydown', async (e) => {
     play();
   }
 });
-
-// function reload() {
-//   location.reload
-// }
-
-// function dbUse() {
-//   function
-// }
 
 function play() {
   function move() {
@@ -256,25 +241,32 @@ function play() {
               console.error('소리 재생 중 오류 발생:', error);
             });
 
-            if (score_val.innerHTML > 1) {
-              const backgroundDiv = document.querySelector('.background');
-              backgroundDiv.style.backgroundImage =
-                "url('/img/background2.jpg')"; // 새로운 이미지 경로
-            }
-
             if (score_val.innerHTML > 2) {
               const backgroundDiv = document.querySelector('.background');
               backgroundDiv.style.backgroundImage =
-                "url('/img/background3.png')"; // 새로운 이미지 경로
+                "url('/img/background2.jpg')"; // 새로운 이미지 경로
+              move_speed = 7; //move_speed 가 원래 5 -> 7
+              gravity = 0.75;
             }
 
-            if (score_val.innerHTML > 3) {
+            if (score_val.innerHTML > 4) {
+              const backgroundDiv = document.querySelector('.background');
+              backgroundDiv.style.backgroundImage =
+                "url('/img/background3.png')"; // 새로운 이미지 경로
+              move_speed = 10; //move_speed 가 원래 5 -> 7
+              gravity = 0.9;
+            }
+
+            if (score_val.innerHTML > 6) {
               const backgroundDiv = document.querySelector('.background');
               backgroundDiv.style.backgroundImage =
                 "url('/img/background4.jpg')"; // 새로운 이미지 경로
+              move_speed = 15; //move_speed 가 원래 5 -> 7
+              gravity = 1.2;
             }
           }
           element.style.left = pipe_sprite_props.left - move_speed + 'px';
+          // element.style.left = '100px';
         }
       }
     });
@@ -328,16 +320,17 @@ function play() {
   let pipe_seperation = 0;
 
   // 두 파이프 사이의 간격에 대한 상수 값
-  let pipe_gap = 30;
+  let pipe_gap = 31;
 
   function create_pipe() {
     if (game_state != 'Play') return;
 
-    if (pipe_seperation > 100) {
+    // move_speed에 따라 파이프 생성 주기를 조정
+    if (pipe_seperation > 100 - (move_speed - 5) * 6) {
       pipe_seperation = 0;
 
       // 파이프의 Y축 위치를 무작위로 계산
-      let pipe_posi = Math.floor(Math.random() * 50) + 8;
+      let pipe_posi = Math.floor(Math.random() * 60) + 8;
 
       // 위쪽 파이프 생성
       let pipe_sprite_inv = document.createElement('div');
