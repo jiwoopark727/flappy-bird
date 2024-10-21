@@ -155,8 +155,23 @@ document.addEventListener('keydown', async (e) => {
         console.log('사용자 데이터를 찾을 수 없습니다.');
       }
 
+      if (score_val.innerHTML > 20) {
+        const listItems = document.querySelectorAll('.ranking li'); // ul li 요소들 선택
+        listItems.forEach(function (item) {
+          item.style.color = 'white'; // 각 li 요소의 color 속성 변경
+        });
+      }
+
+      // if (score_val.innerHTML > 40) {
+      //   const listItems = document.querySelectorAll('.ranking li'); // ul li 요소들 선택
+      //   listItems.forEach(function (item) {
+      //     item.style.color = 'white'; // 각 li 요소의 color 속성 변경
+      //   });
+      // }
+
       // 게임 상태를 'ShowRanking'으로 변경하여 엔터를 한 번 더 누르면 새로고침되도록 설정
       game_state = 'ShowRanking';
+
       return; // 랭킹을 보여주고, 이후 처리를 중단
     }
 
@@ -185,6 +200,8 @@ document.addEventListener('keydown', async (e) => {
     score_title.innerHTML = '';
     score_val.innerHTML = '0';
     globalGamesPlay += 1;
+    const backgroundDiv = document.querySelector('.background');
+    backgroundDiv.style.backgroundImage = "url('/img/background.jpg')"; // 이미지 되돌리기
     play();
   }
 });
@@ -221,7 +238,7 @@ function play() {
         ) {
           // 충돌이 발생하면 게임 상태를 변경하고 게임 종료
           game_state = 'End';
-          message2.innerHTML = 'PRESS ENTER';
+          message2.innerHTML = 'GAME OVER <br/> PRESS ENTER';
           endGame(score_val.innerHTML);
           // message.style.left = '26vw';
           return;
@@ -233,11 +250,29 @@ function play() {
             element.increase_score == '1'
           ) {
             score_val.innerHTML = +score_val.innerHTML + 1;
-            const audio = new Audio('Coin.mp3');
+            const audio = new Audio('/sound/Coin.mp3');
             // 소리 재생
             audio.play().catch((error) => {
               console.error('소리 재생 중 오류 발생:', error);
             });
+
+            if (score_val.innerHTML > 20) {
+              const backgroundDiv = document.querySelector('.background');
+              backgroundDiv.style.backgroundImage =
+                "url('/img/background2.jpg')"; // 새로운 이미지 경로
+            }
+
+            if (score_val.innerHTML > 40) {
+              const backgroundDiv = document.querySelector('.background');
+              backgroundDiv.style.backgroundImage =
+                "url('/img/background3.png')"; // 새로운 이미지 경로
+            }
+
+            if (score_val.innerHTML > 60) {
+              const backgroundDiv = document.querySelector('.background');
+              backgroundDiv.style.backgroundImage =
+                "url('/img/background3.png')"; // 새로운 이미지 경로
+            }
           }
           element.style.left = pipe_sprite_props.left - move_speed + 'px';
         }
@@ -261,7 +296,7 @@ function play() {
     // 새와 창 상단 또는 하단의 충돌 감지
     if (bird_props.top <= 0 || bird_props.bottom >= background.bottom) {
       game_state = 'End';
-      message2.innerHTML = 'PRESS ENTER';
+      message2.innerHTML = 'GAME OVER <br/> PRESS ENTER';
       endGame(score_val.innerHTML);
 
       // 게임 플레이 횟수 -1
