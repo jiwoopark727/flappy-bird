@@ -155,7 +155,7 @@ document.addEventListener('keydown', async (e) => {
         console.log('사용자 데이터를 찾을 수 없습니다.');
       }
 
-      if (score_val.innerHTML > 20) {
+      if (score_val.innerHTML > 1) {
         const listItems = document.querySelectorAll('.ranking li'); // ul li 요소들 선택
         listItems.forEach(function (item) {
           item.style.color = 'white'; // 각 li 요소의 color 속성 변경
@@ -201,7 +201,7 @@ document.addEventListener('keydown', async (e) => {
     score_val.innerHTML = '0';
     globalGamesPlay += 1;
     const backgroundDiv = document.querySelector('.background');
-    backgroundDiv.style.backgroundImage = "url('/img/background.jpg')"; // 이미지 되돌리기
+    backgroundDiv.style.backgroundImage = "url('/img/background.jpg')"; // 배경 이미지 되돌리기
     play();
   }
 });
@@ -256,22 +256,22 @@ function play() {
               console.error('소리 재생 중 오류 발생:', error);
             });
 
-            if (score_val.innerHTML > 20) {
+            if (score_val.innerHTML > 1) {
               const backgroundDiv = document.querySelector('.background');
               backgroundDiv.style.backgroundImage =
                 "url('/img/background2.jpg')"; // 새로운 이미지 경로
             }
 
-            if (score_val.innerHTML > 40) {
+            if (score_val.innerHTML > 2) {
               const backgroundDiv = document.querySelector('.background');
               backgroundDiv.style.backgroundImage =
                 "url('/img/background3.png')"; // 새로운 이미지 경로
             }
 
-            if (score_val.innerHTML > 60) {
+            if (score_val.innerHTML > 3) {
               const backgroundDiv = document.querySelector('.background');
               backgroundDiv.style.backgroundImage =
-                "url('/img/background3.png')"; // 새로운 이미지 경로
+                "url('/img/background4.jpg')"; // 새로운 이미지 경로
             }
           }
           element.style.left = pipe_sprite_props.left - move_speed + 'px';
