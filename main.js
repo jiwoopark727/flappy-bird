@@ -241,7 +241,7 @@ function play() {
               console.error('소리 재생 중 오류 발생:', error);
             });
 
-            if (score_val.innerHTML > 2) {
+            if (score_val.innerHTML > 20) {
               const backgroundDiv = document.querySelector('.background');
               backgroundDiv.style.backgroundImage =
                 "url('/img/background2.jpg')"; // 새로운 이미지 경로
@@ -249,7 +249,7 @@ function play() {
               gravity = 0.75;
             }
 
-            if (score_val.innerHTML > 4) {
+            if (score_val.innerHTML > 40) {
               const backgroundDiv = document.querySelector('.background');
               backgroundDiv.style.backgroundImage =
                 "url('/img/background3.png')"; // 새로운 이미지 경로
@@ -257,7 +257,7 @@ function play() {
               gravity = 0.9;
             }
 
-            if (score_val.innerHTML > 6) {
+            if (score_val.innerHTML > 60) {
               const backgroundDiv = document.querySelector('.background');
               backgroundDiv.style.backgroundImage =
                 "url('/img/background4.jpg')"; // 새로운 이미지 경로
