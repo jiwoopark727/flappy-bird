@@ -92,15 +92,14 @@ let score_title = document.querySelector('.score_title');
 // 게임 상태를 초기화
 let game_state = 'Start';
 
-// 키보드 입력 이벤트 리스너 추가
-document.addEventListener('keydown', async (e) => {
-  // 게임 종료 후 엔터를 한 번 더 눌렀을 때 페이지를 새로고침하기 위한 상태
-  if (game_state === 'ShowRanking' && e.key == 'Enter') {
-    location.reload(); // 새로고침
+// 공통 로그인 후 게임 시작 로직을 함수로 추출
+async function handleLoginAndStartGame() {
+  if (game_state === 'ShowRanking') {
+    location.reload();
     return;
   }
 
-  if (e.key == 'Enter' && game_state != 'Play') {
+  if (game_state !== 'Play') {
     if (
       globalName === '' ||
       globalDepartment === '' ||
@@ -109,83 +108,58 @@ document.addEventListener('keydown', async (e) => {
       const name = document.getElementById('name').value;
       const department = document.getElementById('department').value;
       const studentId = document.getElementById('studentId').value;
-      // 입력 값이 없으면 경고
       if (!name || !department || !studentId) {
         alert('모든 정보를 입력해주세요.');
         return;
       }
-      // 전역 변수에 사용자 정보 저장
+
       globalName = name;
       globalDepartment = department;
       globalStudentId = studentId;
       globalGamesPlay = 0;
 
-      // 사용자 정보를 저장
       await saveUserData(studentId, name, department);
     } else if (globalGamesPlay >= 3) {
       alert('3번의 기회를 다 소진했습니다. 로그인 화면으로 돌아갑니다.');
 
-      // 'users' 경로의 데이터를 highScore 기준으로 오름차순으로 가져오기
       const usersRef = ref(db, 'users');
       const highScoreQuery = query(usersRef, orderByChild('highScore'));
-
       const snapshot = await get(highScoreQuery);
 
       if (snapshot.exists()) {
         const usersData = snapshot.val();
-
-        // 객체를 배열로 변환하여 highScore 기준으로 내림차순 정렬
         const sortedUsers = Object.entries(usersData).sort(
           ([, userA], [, userB]) => userB.highScore - userA.highScore
-        ); // 내림차순 정렬
+        );
 
-        // 정렬된 결과를 출력
         const rankingListItems = document.querySelector('.ranking');
+        rankingListItems.innerHTML = ''; // 이전 순위 초기화
 
-        // 순위 데이터와 li 요소에 매핑하여 각 순위를 li 요소에 채움
         sortedUsers.slice(0, 10).forEach((user, index) => {
           const li = document.createElement('li');
           li.textContent = `${index + 1}위 ${user[1].name} ${
             user[1].department
           } ${user[1].studentId} ${user[1].highScore}점`;
 
+          li.style.color = 'white'; // 점수가 높으면 흰색으로
           rankingListItems.appendChild(li);
         });
-      } else {
-        console.log('사용자 데이터를 찾을 수 없습니다.');
       }
 
-      if (score_val.innerHTML > 2) {
-        const listItems = document.querySelectorAll('.ranking li'); // ul li 요소들 선택
-        listItems.forEach(function (item) {
-          item.style.color = 'white'; // 각 li 요소의 color 속성 변경
-        });
-      }
-
-      // 게임 상태를 'ShowRanking'으로 변경하여 엔터를 한 번 더 누르면 새로고침되도록 설정
       game_state = 'ShowRanking';
-
-      return; // 랭킹을 보여주고, 이후 처리를 중단
+      return;
     }
 
     const userRef = ref(db, 'users/' + globalStudentId);
     const snapshot = await get(userRef);
     if (snapshot.exists()) {
       const userData = snapshot.val();
-
-      // 업데이트된 최고 점수와 게임 플레이 수 저장
       await update(userRef, {
         gamesPlayed: userData.gamesPlayed + 1,
       });
-      console.log('게임 플레이 횟수 1 증가');
-    } else {
-      console.error('사용자 데이터를 찾을 수 없습니다.');
     }
 
-    // 나머지 게임 시작 로직
-    document.querySelectorAll('.pipe_sprite').forEach((e) => {
-      e.remove();
-    });
+    document.querySelectorAll('.pipe_sprite').forEach((e) => e.remove());
     bird.style.top = '40vh';
     game_state = 'Play';
     message.innerHTML = '';
@@ -193,10 +167,20 @@ document.addEventListener('keydown', async (e) => {
     score_title.innerHTML = '';
     score_val.innerHTML = '0';
     globalGamesPlay += 1;
-    const backgroundDiv = document.querySelector('.background');
-    backgroundDiv.style.backgroundImage = "url('/img/background.jpg')"; // 배경 이미지 되돌리기
+    document.querySelector('.background').style.backgroundImage =
+      "url('/img/background.jpg')";
     play();
   }
+}
+
+document.addEventListener('keydown', async (e) => {
+  if (e.key === 'Enter') {
+    await handleLoginAndStartGame();
+  }
+});
+
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  await handleLoginAndStartGame();
 });
 
 function play() {
