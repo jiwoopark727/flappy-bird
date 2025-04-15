@@ -179,6 +179,10 @@ document.addEventListener('keydown', async (e) => {
   }
 });
 
+document.addEventListener('touchstart', async (e) => {
+  await handleLoginAndStartGame();
+});
+
 document.getElementById('loginBtn').addEventListener('click', async () => {
   await handleLoginAndStartGame();
 });
@@ -260,13 +264,26 @@ function play() {
   requestAnimationFrame(move);
 
   let bird_dy = 0;
+
+  function jump() {
+    if (game_state === 'Play') {
+      bird_dy = -12.6;
+    }
+  }
+
   async function apply_gravity() {
     if (game_state != 'Play') return;
+
     bird_dy = bird_dy + gravity;
+
     document.addEventListener('keydown', (e) => {
       if (e.key == 'ArrowUp' || e.key == ' ') {
-        bird_dy = -12.6;
+        jump();
       }
+    });
+
+    document.addEventListener('touchstart', () => {
+      jump();
     });
 
     // 새와 창 상단 또는 하단의 충돌 감지
