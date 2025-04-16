@@ -79,7 +79,7 @@ Firebase Realtime Database를 활용하여 사용자 정보 관리, 최고 점�
   <tr>
     <td align="center">
       <p>리더보드1 화면</p>
-      <img src="https://raw.githubusercontent.com/jiwoopark727/flappy-bird/main/img/readme_board1.png" height="250" alt="리더보드1 화면">
+      <img src="https://raw.githubusercontent.com/jiwoopark727/flappy-bird/main/img/readme_board.png" height="250" alt="리더보드1 화면">
     </td>
     <td align="center">
       <p>리더보드2 화면</p>
