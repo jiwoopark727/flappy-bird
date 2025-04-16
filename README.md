@@ -20,7 +20,6 @@ Firebase Realtime Database를 활용하여 사용자 정보 관리, 최고 점�
 - **Firebase 통합**: 사용자 로그인 (Google OAuth 지원), 최고 점수 저장 및 리더보드(순위표) 기능
 - **제한된 플레이**: 사용자는 최대 3번까지 플레이 가능
 - **순위 시스템**: 모든 플레이어의 최고 점수를 기반으로 한 리더보드
-- **응답형 UI**: 데스크톱과 모바일 환경 모두에서 플레이 가능
 - **파이프 생성 및 스크롤**: 파이프가 화면 오른쪽에서 왼쪽으로 이동, move_speed에 따라 이동 속도 조절,<br/>
   pipe_seperation을 조정하여 move_speed에 비례해 파이프 빈번도 증가, pipe_gap으로 상하 파이프 간격 유지
 - **점수에 따른 난이도 조절**: move_speed와 gravity 조정, 게임 진행 중 플레이어가 획득한 점수(score_val.innerHTML)에 따라<br/>
