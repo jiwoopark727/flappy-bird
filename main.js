@@ -179,6 +179,21 @@ document.addEventListener('keydown', async (e) => {
   }
 });
 
+document.addEventListener('touchend', async (e) => {
+  // 클릭한 요소가 입력창이나 버튼인 경우 무시
+  const targetTag = e.target.tagName.toLowerCase();
+  if (['input', 'button', 'label', 'select', 'textarea'].includes(targetTag)) {
+    return;
+  }
+
+  // global 변수들이 모두 입력되어 있지 않으면 실행하지 않음
+  if (!globalName || !globalDepartment || !globalStudentId) {
+    return;
+  }
+
+  await handleLoginAndStartGame();
+});
+
 // 게임 시작 버튼 클릭 시에만 handleLoginAndStartGame() 실행
 const loginButton = document.getElementById('loginBtn');
 loginButton.addEventListener('click', async () => {
