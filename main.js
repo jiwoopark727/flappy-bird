@@ -197,6 +197,14 @@ document.getElementById('loginBtn').addEventListener('click', async () => {
   await handleLoginAndStartGame();
 });
 
+document.querySelectorAll('input').forEach((el) => {
+  el.addEventListener('focus', () => {
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300); // 키보드 올라오는 타이밍 감안해서 딜레이 줌
+  });
+});
+
 function play() {
   function move() {
     // 게임이 종료되었는지 감지
