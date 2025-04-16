@@ -179,11 +179,11 @@ document.addEventListener('keydown', async (e) => {
   }
 });
 
-document.addEventListener('touchstart', async (e) => {
+document.addEventListener('touchend', async (e) => {
   await handleLoginAndStartGame();
 });
 
-document.addEventListener('touchstart', async (e) => {
+document.addEventListener('touchend', async (e) => {
   // 클릭한 요소가 input이나 버튼일 경우에는 return
   const targetTag = e.target.tagName.toLowerCase();
   if (['input', 'button', 'label', 'select', 'textarea'].includes(targetTag)) {
@@ -300,7 +300,7 @@ function play() {
       }
     });
 
-    document.addEventListener('touchstart', () => {
+    document.addEventListener('touchend', () => {
       jump();
     });
 
